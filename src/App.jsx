@@ -1,13 +1,8 @@
-import React from 'react'
-import Navbar from './components/Navbar/Navbar'
+ import './app.css'
+ import Layout from './layout/Layout'
+function App() {
+  return <Layout />;
   
-const App = () => {
-  return (
-    <div className='app'>
-      <Navbar />
-      
-    </div>
-  )
 }
 
 export default App
