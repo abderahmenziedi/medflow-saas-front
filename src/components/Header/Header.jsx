@@ -75,11 +75,7 @@ const Header = () => {
 
           {/* Nav Right */}
           <div className="flex items-center gap-4">   
-            <Link to='/'>
-              <figure className='w-[35px] h-[35px] rounded-full cursor-pointer'>
-                <img src={userImg} className="w-full rounded-full" alt="User avatar" />
-              </figure>
-            </Link>
+           
 
             <Link to='/login'>
               <button className='bg-buttonBgColor py-2 px-6 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]'>
