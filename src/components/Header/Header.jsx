@@ -20,8 +20,19 @@ const Header = () => {
   const { user, role, token, dispatch } = useContext(authContext);
 
   const handleLogout = () => {
+    // Effacer le stockage local
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
+    
+    // Mettre à jour le contexte
     dispatch({ type: 'LOGOUT' });
+    
+    // Rediriger vers la page de connexion
     navigate('/login');
+    
+    // Forcer un rechargement pour s'assurer que tous les états sont réinitialisés
+    window.location.reload();
   };
 
   const handleStickyHeader = () => {
