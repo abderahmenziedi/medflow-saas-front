@@ -48,7 +48,7 @@ const Login = () => {
         payload:{
           user:result.data,
           role:result.data.role,
-          token:result.data.token,
+          token:result.token,
         }});
 
 
@@ -57,7 +57,7 @@ const Login = () => {
       toast.success(result.message);
       navigate('/home');
     } catch (err) {
-      toast.error(err.message || 'Failed to register');
+      toast.error(err.message || 'Failed to login');
     } finally {
       setLoading(false);
     }
