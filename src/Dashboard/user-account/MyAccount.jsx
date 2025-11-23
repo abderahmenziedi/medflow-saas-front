@@ -4,28 +4,36 @@ import { toast } from 'react-toastify';
 import userImg from '../../assets/images/doctor-img01.png';
 import { authContext } from '../../context/AuthContext';
 import { BASE_URL } from '../../../config';
+import MyBookings from './MyBookings';
+import Profile from './Profile';
+import useGetProfile from '../../hooks/useFetchData';
 
 const MyAccount = () => {
   const { user, token, dispatch } = useContext(authContext);
   const navigate = useNavigate();
+  const [tab, setTab] = useState('bookings');
+  const { data: userData, loading, error } = useGetProfile(`${BASE_URL}/users/profile/me`);
+  console.log(userData,'userdata');
+  
+
   
   // Blood type options
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
   
   // Initialize state with user data
-  const [userData, setUserData] = useState({
+  const [localUserData, setLocalUserData] = useState({
     
     name: user?.name || 'abbbb',
     email: user?.email || 'abb@gmail.com',
     bloodType: user?.bloodType || 'AB+'
   });
   
-  const [loading, setLoading] = useState(false);
+  const [loadingState, setLoadingState] = useState(false);
 
   // Handle blood type change
   const handleBloodTypeChange = (e) => {
     const newBloodType = e.target.value;
-    setUserData(prev => ({
+    setLocalUserData(prev => ({
       ...prev,
       bloodType: newBloodType
     }));
@@ -37,7 +45,7 @@ const MyAccount = () => {
   // Update blood type in backend
   const updateBloodType = async (bloodType) => {
     try {
-      setLoading(true);
+      setLoadingState(true);
       const res = await fetch(`${BASE_URL}/users/${user._id}`, {
         method: 'PUT',
         headers: {
@@ -57,7 +65,7 @@ const MyAccount = () => {
     } catch (err) {
       toast.error(err.message || 'Failed to update blood type');
     } finally {
-      setLoading(false);
+      setLoadingState(false);
     }
   };
 
@@ -82,7 +90,7 @@ const MyAccount = () => {
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       try {
-        setLoading(true);
+        setLoadingState(true);
         const res = await fetch(`${BASE_URL}/users/${user._id}`, {
           method: 'DELETE',
           headers: {
@@ -101,7 +109,7 @@ const MyAccount = () => {
       } catch (err) {
         toast.error(err.message || 'Failed to delete account');
       } finally {
-        setLoading(false);
+        setLoadingState(false);
       }
     }
   };
@@ -116,17 +124,17 @@ const MyAccount = () => {
             </figure>
 
             <div className='text-center mt-4'>
-              <h3 className='text-[18px] leading-[30px] text-headingColor font-bold'>{userData.name}</h3>
-              <p className='text-[15px] leading-6 text-textColor font-medium mt-2'>{userData.email}</p>
+              <h3 className='text-[18px] leading-[30px] text-headingColor font-bold'>{localUserData.name}</h3>
+              <p className='text-[15px] leading-6 text-textColor font-medium mt-2'>{localUserData.email}</p>
               
               <div className='mt-4'>
                 <label className='text-[15px] leading-6 text-textColor font-medium'>
                   Blood Type: 
                 </label>
                 <select 
-                  value={userData.bloodType}
+                  value={localUserData.bloodType}
                   onChange={handleBloodTypeChange}
-                  disabled={loading}
+                  disabled={loadingState}
                   className='ml-2 text-headingColor text-[19px] leading-8 bg-transparent border-b-2 border-primaryColor focus:outline-none'
                 >
                   {bloodTypes.map(type => (
@@ -135,7 +143,7 @@ const MyAccount = () => {
                 </select>
               </div>
               
-              {loading && (
+              {loadingState && (
                 <p className='text-primaryColor text-sm mt-2'>Updating...</p>
               )}
             </div>
@@ -150,7 +158,7 @@ const MyAccount = () => {
               
               <button
                 onClick={handleDeleteAccount}
-                disabled={loading}
+                disabled={loadingState}
                 className='w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50'
               >
                 Delete Account
@@ -158,6 +166,22 @@ const MyAccount = () => {
             </div>
           </div>
         </div>
+
+        <div className='md:col-span-2 md:px-[30px]'>
+          <div>
+            <button onClick={() => setTab('bookings')}
+                className={`${tab ==='bookings' && 'bg-primaryColor text-white font-normal' }p-2 mr-5 px-5 text-headingColor  rounded-md  font-semibold text-[16px] leading-6
+            border border-solid border-primaryColor`}>My Bookings</button>
+               <button onClick={() => setTab('settings')}
+                className={`${tab ==='settings' && 'bg-primaryColor text-white font-normal' }py-2 mr-5 px-5 text-headingColor  rounded-md  font-semibold text-[16px] leading-6
+            border border-solid border-primaryColor`	}>Profile Settings</button>
+          </div>
+          <div className='mt-8'>
+            {tab === 'bookings' && <MyBookings />}
+            {tab === 'settings' && <Profile />}
+          </div>
+        </div>
+
       </div> 
     </div>
   );
