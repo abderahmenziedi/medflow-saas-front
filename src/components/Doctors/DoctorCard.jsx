@@ -3,9 +3,12 @@ import starIcon from '../../assets/images/Star.png'
 import { Link } from 'react-router-dom'
 import { BsArrowRight } from 'react-icons/bs'
 
-const Doctorcard = (doctor) => {
-
+const Doctorcard = (props) => {
+    // Handle both direct doctor object and appointment object with doctor data
+    const doctorData = props.appointment ? props.appointment.doctor : props;
+    
     const {
+        _id: id,
         name,
         specialization,
         avgRating,
@@ -13,7 +16,7 @@ const Doctorcard = (doctor) => {
         photo,
         totalPatients,
         hospital,
-    } = doctor;
+    } = doctorData;
 
     return (
         <div className='p-3 lg:p-5 shadow rounded-xl'>
@@ -35,20 +38,20 @@ const Doctorcard = (doctor) => {
                 <div className='flex items-center gap-2 mt-3'>
                     <img src={starIcon} alt="star" className='w-4 h-4' />
                     <span className='text-[14px] font-[600]'>
-                        {avgRating} 
+                        {avgRating || 0} 
                     </span>
                     <span className='text-gray-500 text-[13px]'>
-                        ({totalRating} reviews)
+                        ({totalRating || 0} reviews)
                     </span>
                 </div>
 
                 <div className='mt-3 text-[14px] text-gray-600'>
-                    <p><span className='font-semibold'>Patients:</span> {totalPatients}</p>
-                    <p><span className='font-semibold'>Hospital:</span> {hospital}</p>
+                    <p><span className='font-semibold'>Patients:</span> {totalPatients || 0}</p>
+                    <p><span className='font-semibold'>Hospital:</span> {hospital || 'Not specified'}</p>
                 </div>
 
                 <Link 
-                    to={`/doctor/${doctor.id}`} 
+                    to={`/doctor/${id}`} 
                     className='flex items-center gap-1 mt-4 text-irisBlueColor font-[600]'
                 >
                     View Profile <BsArrowRight />

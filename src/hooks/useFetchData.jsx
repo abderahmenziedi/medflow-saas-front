@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { BASE_URL } from '../../config';
+import { BASE_URL } from '../config';
 
-const useGetProfile = (url) => {
+const useFetchData = (url) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,4 +35,4 @@ const useGetProfile = (url) => {
   return { data, loading, error };
 };
 
-export default useGetProfile;
+export default useFetchData;
