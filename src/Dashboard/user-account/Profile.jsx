@@ -61,49 +61,6 @@ const Profile = () => {
     }
   };
   
-  // Handle password change
-  const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    const newPassword = prompt('Enter your new password:');
-    if (!newPassword) return;
-    
-    if (newPassword.length < 6) {
-      toast.error('Password must be at least 6 characters');
-      return;
-    }
-    
-    const confirmPassword = prompt('Confirm your new password:');
-    if (newPassword !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-    
-    setLoading(true);
-    
-    try {
-      const res = await fetch(`${BASE_URL}/users/${user._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ password: newPassword })
-      });
-      
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to update password');
-      }
-      
-      toast.success('Password updated successfully');
-    } catch (err) {
-      toast.error(err.message || 'Failed to update password');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -259,18 +216,6 @@ const Profile = () => {
               </div>
             </div>
           </div>
-        </div>
-        
-        {/* Password Change */}
-        <div className="mt-6">
-          <button
-            type="button"
-            onClick={handlePasswordChange}
-            disabled={loading}
-            className="bg-secondaryColor text-white py-2 px-4 rounded-md hover:bg-[#ff6600dd] transition-colors duration-300 font-semibold disabled:opacity-50"
-          >
-            Change Password
-          </button>
         </div>
         
         {/* Submit Button */}

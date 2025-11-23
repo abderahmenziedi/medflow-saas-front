@@ -16,9 +16,6 @@ const MyAccount = () => {
   
 
   
-  // Blood type options
-  const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-  
   // Initialize state with user data
   const [localUserData, setLocalUserData] = useState({
     
@@ -26,47 +23,6 @@ const MyAccount = () => {
     email: user?.email || 'abb@gmail.com',
     bloodType: user?.bloodType || 'AB+'
   });
-  
-  const [loadingState, setLoadingState] = useState(false);
-
-  // Handle blood type change
-  const handleBloodTypeChange = (e) => {
-    const newBloodType = e.target.value;
-    setLocalUserData(prev => ({
-      ...prev,
-      bloodType: newBloodType
-    }));
-    
-    // Update blood type in backend
-    updateBloodType(newBloodType);
-  };
-
-  // Update blood type in backend
-  const updateBloodType = async (bloodType) => {
-    try {
-      setLoadingState(true);
-      const res = await fetch(`${BASE_URL}/users/${user._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ bloodType })
-      });
-
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to update blood type');
-      }
-      
-      toast.success('Blood type updated successfully');
-    } catch (err) {
-      toast.error(err.message || 'Failed to update blood type');
-    } finally {
-      setLoadingState(false);
-    }
-  };
 
   // Handle logout
   const handleLogout = () => {
@@ -89,7 +45,6 @@ const MyAccount = () => {
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       try {
-        setLoadingState(true);
         const res = await fetch(`${BASE_URL}/users/${user._id}`, {
           method: 'DELETE',
           headers: {
@@ -107,8 +62,6 @@ const MyAccount = () => {
         toast.success('Account deleted successfully');
       } catch (err) {
         toast.error(err.message || 'Failed to delete account');
-      } finally {
-        setLoadingState(false);
       }
     }
   };
@@ -130,21 +83,10 @@ const MyAccount = () => {
                 <label className='text-[15px] leading-6 text-textColor font-medium'>
                   Blood Type: 
                 </label>
-                <select 
-                  value={localUserData.bloodType}
-                  onChange={handleBloodTypeChange}
-                  disabled={loadingState}
-                  className='ml-2 text-headingColor text-[19px] leading-8 bg-transparent border-b-2 border-primaryColor focus:outline-none'
-                >
-                  {bloodTypes.map(type => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </select>
+                <span className='ml-2 text-headingColor text-[19px] leading-8'>
+                  {localUserData.bloodType}
+                </span>
               </div>
-              
-              {loadingState && (
-                <p className='text-primaryColor text-sm mt-2'>Updating...</p>
-              )}
             </div>
             
             <div className='mt-8 flex flex-col gap-4 w-full max-w-xs'>
@@ -157,8 +99,7 @@ const MyAccount = () => {
               
               <button
                 onClick={handleDeleteAccount}
-                disabled={loadingState}
-                className='w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50'
+                className='w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors'
               >
                 Delete Account
               </button>
