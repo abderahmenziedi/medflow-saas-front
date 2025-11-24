@@ -92,14 +92,14 @@ const MyAccount = () => {
             <div className='mt-8 flex flex-col gap-4 w-full max-w-xs'>
               <button
                 onClick={handleLogout}
-                className='w-full bg-primaryColor text-white py-2 px-4 rounded-md hover:bg-[#0066ffdd] transition-colors'
+                className='w-full bg-black text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors'
               >
                 Logout
               </button>
               
               <button
                 onClick={handleDeleteAccount}
-                className='w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors'
+                className='w-full bg-black text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors'
               >
                 Delete Account
               </button>
@@ -107,13 +107,14 @@ const MyAccount = () => {
           </div>
         </div>
 
-        <div className='md:col-span-2 md:px-[30px]'>
+        <div className='md:col-span-2 md:px-[30px] hidden lg:flex flex-col p-[30px]  shadow-panelShadow items-center 
+        h-max rounded-md'>
           <div>
             <button onClick={() => setTab('bookings')}
-                className={`${tab ==='bookings' && 'bg-primaryColor text-white font-normal' }p-2 mr-5 px-5 text-headingColor  rounded-md  font-semibold text-[16px] leading-6
-            border border-solid border-primaryColor`}>My Bookings</button>
+                className={`${tab ==='bookings' && 'bg-indigo-100 text-primaryColor font-normal' }p-2 mr-5 px-5 text-headingColor  rounded-md  font-semibold text-[16px] leading-6
+            border border-solid border-primaryColor `}>My Bookings</button>
                <button onClick={() => setTab('settings')}
-                className={`${tab ==='settings' && 'bg-primaryColor text-white font-normal' }py-2 mr-5 px-5 text-headingColor  rounded-md  font-semibold text-[16px] leading-6
+                className={`${tab ==='settings' && 'bg-indigo-100 text-primaryColor font-normal' }py-2 mr-5 px-5 text-headingColor  rounded-md  font-semibold text-[16px] leading-6
             border border-solid border-primaryColor`	}>Profile Settings</button>
           </div>
           <div className='mt-8'>
