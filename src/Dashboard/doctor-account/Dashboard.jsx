@@ -3,6 +3,9 @@ import { BASE_URL } from '../../config';
 import useGetProfile from '../../hooks/useFetchData';
 import Tabs from './Tabs'; 
 import starIcon from '../../assets/images/star.png';
+import DoctorAbout from '../../pages/Doctors/DoctorAbout';
+import Profile from './Profile';
+
 
 const Dashboard = () => {
   const { data , loading, error } = useGetProfile(`${BASE_URL}/doctors/profile/me`);
@@ -69,16 +72,19 @@ const Dashboard = () => {
                       <p className='text-[16px] leading-6 font-semibold text__para lg:max-w-[390px]'>
                         docotor bio
                       </p>
-                       
-                          
-
                     </div>
-
                   </div>
+                                      <div>
+                      <DoctorAbout
+                        name={data?.name} 
+                        about={data?.about} 
+                        qualifications={data?.qualifications}
+                        experiences={data?.experiences}/>
+                    </div>
               </div>
               )}
               {tab === 'appointments' && <div>Appointments </div>}
-              {tab === 'settings' && <div>Profile </div>}
+              {tab === 'settings' && <Profile />  }
             </div>
 
 
