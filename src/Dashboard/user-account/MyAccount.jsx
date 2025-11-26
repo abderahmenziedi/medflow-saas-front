@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { authContext } from '../../context/AuthContext';
@@ -12,17 +12,30 @@ const MyAccount = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState('bookings');
   const { data: userData, loading, error } = useGetProfile(`${BASE_URL}/users/profile/me`);
-  console.log(userData,'userdata');
-  
-
   
   // Initialize state with user data
   const [localUserData, setLocalUserData] = useState({
-    
-    name: user?.name || 'abbbb',
-    email: user?.email || 'abb@gmail.com',
-    bloodType: user?.bloodType || 'AB+'
+    name: '',
+    email: '',
+    bloodType: ''
   });
+
+  // Update local user data when userData is fetched
+  useEffect(() => {
+    if (userData) {
+      setLocalUserData({
+        name: userData.name || user?.name || 'abbbb',
+        email: userData.email || user?.email || 'abb@gmail.com',
+        bloodType: userData.bloodType || user?.bloodType || 'AB+'
+      });
+    } else if (user) {
+      setLocalUserData({
+        name: user.name || 'abbbb',
+        email: user.email || 'abb@gmail.com',
+        bloodType: user.bloodType || 'AB+'
+      });
+    }
+  }, [userData, user]);
 
   // Handle logout
   const handleLogout = () => {
@@ -66,13 +79,21 @@ const MyAccount = () => {
     }
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className='max-w-[1170px] px-5 mx-auto'> 
       <div className='grid md:grid-cols-3 gap-10'>
         <div className='pb-[50px] px-[30px] rounded-md'>
           <div className='flex flex-col items-center justify-center'>
             <figure className='w-[100px] h-[100px] rounded-full border-2 border-solid border-primaryColor'>
-              <img src={user?.photo } alt='user' className='w-full h-full rounded-full' />
+              <img src={user?.photo} alt='user' className='w-full h-full rounded-full' />
             </figure>
 
             <div className='text-center mt-4'>
@@ -115,7 +136,7 @@ const MyAccount = () => {
             border border-solid border-primaryColor `}>My Bookings</button>
                <button onClick={() => setTab('settings')}
                 className={`${tab ==='settings' && 'bg-indigo-100 text-primaryColor font-normal' }py-2 mr-5 px-5 text-headingColor  rounded-md  font-semibold text-[16px] leading-6
-            border border-solid border-primaryColor`	}>Profile Settings</button>
+            border border-solid border-primaryColor`}>Profile Settings</button>
           </div>
           <div className='mt-8'>
             {tab === 'bookings' && <MyBookings />}

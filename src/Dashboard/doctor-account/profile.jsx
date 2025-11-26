@@ -189,6 +189,31 @@ const Profile = () => {
     setFormData({ ...formData, experiences: newExperiences });
   };
   
+  // Handle time slots change
+  const handleTimeSlotChange = (index, field, value) => {
+    const newTimeSlots = [...formData.timeSlots];
+    newTimeSlots[index] = { ...newTimeSlots[index], [field]: value };
+    setFormData({ ...formData, timeSlots: newTimeSlots });
+  };
+
+  // Add a new time slot
+  const addTimeSlot = () => {
+    setFormData({
+      ...formData,
+      timeSlots: [...formData.timeSlots, { day: '', startingTime: '', endingTime: '' }]
+    });
+  };
+
+  // Remove a time slot
+  const removeTimeSlot = (index) => {
+    if (formData.timeSlots.length <= 1) {
+      toast.error('You must have at least one time slot');
+      return;
+    }
+    const newTimeSlots = formData.timeSlots.filter((_, i) => i !== index);
+    setFormData({ ...formData, timeSlots: newTimeSlots });
+  };
+  
   // Handle file input change
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
@@ -571,6 +596,76 @@ const Profile = () => {
                 </label>
               </div>
             </div>
+          </div>
+          
+          {/* Time Slots Section */}
+          <div className="mb-4 md:col-span-2">
+            <label className="block text-headingColor font-semibold mb-2">
+              Available Time Slots
+            </label>
+            {formData.timeSlots.map((slot, index) => (
+              <div key={index} className="border border-gray-200 rounded p-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Day
+                    </label>
+                    <select
+                      value={slot.day || ''}
+                      onChange={(e) => handleTimeSlotChange(index, 'day', e.target.value)}
+                      className="w-full px-3 py-2 border border-solid border-[#0066ff46] rounded-md focus:outline-none focus:border-primaryColor"
+                    >
+                      <option value="">Select Day</option>
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Sunday">Sunday</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Starting Time
+                    </label>
+                    <input
+                      type="time"
+                      value={slot.startingTime || ''}
+                      onChange={(e) => handleTimeSlotChange(index, 'startingTime', e.target.value)}
+                      className="w-full px-3 py-2 border border-solid border-[#0066ff46] rounded-md focus:outline-none focus:border-primaryColor"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Ending Time
+                    </label>
+                    <input
+                      type="time"
+                      value={slot.endingTime || ''}
+                      onChange={(e) => handleTimeSlotChange(index, 'endingTime', e.target.value)}
+                      className="w-full px-3 py-2 border border-solid border-[#0066ff46] rounded-md focus:outline-none focus:border-primaryColor"
+                    />
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    onClick={() => removeTimeSlot(index)}
+                    className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
+                  >
+                    Remove Time Slot
+                  </button>
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addTimeSlot}
+              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Add Time Slot
+            </button>
           </div>
         </div>
         

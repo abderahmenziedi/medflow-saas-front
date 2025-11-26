@@ -3,43 +3,48 @@ import avatar from '../../assets/images/avatar-icon.png'
 import { formatDate } from '../../utils/formateDate'
 import { AiFillStar } from 'react-icons/ai'
 import FeedbackForm from './FeedbackForm'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { authContext } from '../../context/AuthContext'
 
-
-
-const Feedback = () => {
+const Feedback = ({reviews,totalRating}) => {
   const[showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const { role } = useContext(authContext);
+  
   return (
     <div>
       <div className="mb-[50px]">
         <h4 className='text-[20px] leading-[30px] font-bold text-headingColor mb-[30px]'>
-          All reviews
+          All reviews ({totalRating})
         </h4>
-        <div className='flex justify-between gap-10 mb-[30px]'>
+
+       {reviews?.map((review,index) =>
+         ( <div className='flex justify-between gap-10 mb-[30px]' key={index}>
           <div className='flex gap-3'>
             <figure className='w-10 h-10 rounded-full'>
-              <img className="w-full" src={avatar} alt="" />
+              <img className="w-full" src={review?.user?.photo} alt="" />
             </figure>
             <div>
-              <h5 className='text-[16px] leading-6 text-primaryColor font-bold'> Ali ahmed</h5>
+              <h5 className='text-[16px] leading-6 text-primaryColor font-bold'> {review?.user?.name}</h5>
               <p className='text-[14px] leading-6 text-textColor'>
-               {formatDate('07-04-2010')}
+               {formatDate(review?.createdAt)}
               </p>
               <p className='text__para mt-3 font-medium text-[15px]'>
-                Good Services, Highly Recommended.
+                {review.reviewText}
               </p>
             </div>
           </div>
           <div className='flex gap-1'>
-            {[...Array(5).keys()].map((_, index) => (
+            {[...Array(review?.rating).keys()].map((_, index) => (
               <AiFillStar key={index} color='#0067FF' />
             ))}
           </div>
-        </div>
+        </div>)
+
+       ) }
       </div>
 
       
-      {!showFeedbackForm && (
+      {!showFeedbackForm && role === 'patient' && (
         <div className="text-center"> 
         <button className='btn' onClick={()=>setShowFeedbackForm(true)}>
           Give Feedback

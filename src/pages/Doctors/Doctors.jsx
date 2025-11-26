@@ -1,11 +1,26 @@
 import { useState } from 'react';
-import { doctors } from '../../assets/data/doctors';
 import { BsSearch } from 'react-icons/bs';
 import DoctorCard from '../../components/Doctors/DoctorCard'; 
+import { BASE_URL } from '../../config'
+import useFetchData from '../../hooks/useFetchData.jsx'
 
 const Doctors = () => {
+  const {data:doctors, loading, error} = useFetchData(`${BASE_URL}/doctors`)
   const [searchTerm, setSearchTerm] = useState('');
   const [specialtyFilter, setSpecialtyFilter] = useState('All');
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+  
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+  
+  // Handle case where doctors data is null or undefined
+  if (!doctors) {
+    return <div>No doctors found</div>
+  }
 
   const specialties = ['All', ...new Set(doctors.map((doc) => doc.specialization))];
 
@@ -58,7 +73,7 @@ const Doctors = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {filteredDoctors.map((doctor) => (
               <DoctorCard
-                key={doctor.id}
+                key={doctor._id || doctor.id || Math.random()}
                 {...doctor}
                 className="transition-transform transform hover:scale-105 hover:shadow-2xl"
               />
