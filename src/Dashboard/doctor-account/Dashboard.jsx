@@ -4,7 +4,9 @@ import useGetProfile from '../../hooks/useFetchData';
 import Tabs from './Tabs'; 
 import starIcon from '../../assets/images/star.png';
 import DoctorAbout from '../../pages/Doctors/DoctorAbout';
-import Profile from './Profile';
+import Profile from './profile';
+import Appointments from './Appointments';
+
 
 
 const Dashboard = () => {
@@ -52,7 +54,7 @@ const Dashboard = () => {
                     <div>
                       <span className='bg-[#CCF0F3] text-irisBlueColor py-1 px-4 lg:py-2 
                       lg:px-6 rounded-md text-[12px] leading-4 text-[16px] lg:leading-6  font-semibold'>
-                        {data?.specialization} surgon
+                        {data?.specialization} 
                       </span> 
                       <h3 className='text-[22px] leading-9 font-semibold text-headingColor mt-3'>
                         {data?.name}
@@ -61,16 +63,18 @@ const Dashboard = () => {
                         <span className='flex items-center gap-[6px] text-headingColor text-[15px] 
                       leading-6 lg:text-[16px] lg:leading-7 font-semibold'>
                         <img src={starIcon} alt="" />
-                         4.5
+                        {data?.averageRating}
+                         
                          </span>
 
                             <span className='text-Color text-[15px] 
                       leading-6 lg:text-[16px] lg:leading-7 font-semibold'>
-                        (233)
+                        {data?.totalRating}
                          </span>
                       </div>
                       <p className='text-[16px] leading-6 font-semibold text__para lg:max-w-[390px]'>
-                        docotor bio
+                        {data?.bio}
+                        
                       </p>
                     </div>
                   </div>
@@ -83,8 +87,8 @@ const Dashboard = () => {
                     </div>
               </div>
               )}
-              {tab === 'appointments' && <div>Appointments </div>}
-              {tab === 'settings' && <Profile />  }
+              {tab === 'appointments' && <Appointments appointments={data?.appointments}/>} 
+              {tab === 'settings' && <Profile doctorData={data} />  }
             </div>
 
 

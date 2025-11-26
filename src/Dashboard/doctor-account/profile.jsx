@@ -7,6 +7,21 @@ import uploadImageToCloudinary from '../../utils/uploadCloudinary';
 const Profile = () => {
   const { user, token, dispatch } = useContext(authContext);
   
+  // Helper function to convert date to yyyy-MM-dd format
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '';
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    } catch (error) {
+      return '';
+    }
+  };
+  
   // Helper function to convert old format to new format
   const convertQualifications = (quals) => {
     if (!quals || !Array.isArray(quals)) return [{ degree: '', institute: '', from: '', to: '' }];
@@ -17,8 +32,8 @@ const Profile = () => {
         return {
           degree: qual.degree || '',
           institute: qual.institute || '',
-          from: qual.from || '',
-          to: qual.to || ''
+          from: formatDateForInput(qual.from),
+          to: formatDateForInput(qual.to)
         };
       }
       // If it's in the old format (just a string)
@@ -45,8 +60,8 @@ const Profile = () => {
         return {
           position: exp.position || '',
           hospital: exp.hospital || '',
-          from: exp.from || '',
-          to: exp.to || ''
+          from: formatDateForInput(exp.from),
+          to: formatDateForInput(exp.to)
         };
       }
       // If it's in the old format (just a string)
