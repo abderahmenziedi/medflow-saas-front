@@ -28,21 +28,20 @@ const Appointments = ({appointments}) => {
                 <th scope="row" 
                 className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap">
                     <img 
-                    src={item.user.photo} 
+                    src={item.user?.photo || '/default-profile.png'} 
                     alt="" 
                     className="w-10 h-10 rounded-full" 
+                    onError={(e) => {e.target.src = '/default-profile.png'}}
                     />
 
                     <div className='pl-3'>
-                        <div className='text-base font-semibold'>{item.user.name}</div>
-                        <div className='text-sm text-gray-500'>{item.user.email}</div>
+                        <div className='text-base font-semibold'>{item.user?.name || 'N/A'}</div>
+                        <div className='text-sm text-gray-500'>{item.user?.email || 'N/A'}</div>
                     </div>
                 
-
-
                 </th>
                 <td className="py-4 px-6">
-                    {item.user.gender}
+                    {item.user?.gender || 'N/A'}
                 </td>
                 <td className="py-4 px-6">
                     {item.isPaid && (

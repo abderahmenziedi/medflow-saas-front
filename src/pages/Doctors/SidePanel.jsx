@@ -1,6 +1,8 @@
-import React from 'react';
+import { useContext } from 'react';
+import { BASE_URL } from '../../config';
+import { toast } from 'react-toastify';
+import { authContext } from '../../context/AuthContext';
 
-// Helper function to convert 24-hour time format to 12-hour format
 const formatTime = (time) => {
   if (!time) return '';
   
@@ -17,11 +19,36 @@ const formatTime = (time) => {
     
     return `${hour}:${minutes} ${ampm}`;
   } catch (error) {
-    return time; // Return original time if conversion fails
+    return time; 
   }
 };
 
 const SidePanel = ({doctorId,ticketPrice,timeSlots}) => {
+  const { token } = useContext(authContext);
+
+  const bookingHandler = async () => {
+    try {
+        const res = await fetch(`${BASE_URL}/bookings/checkout-session/${doctorId}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message+'Please try again .');
+        } 
+        if (data.session.url) {
+          window.location.href = data.session.url;
+        }
+
+    } catch (error) {
+        toast.error(error.message)
+    }
+  };
+
+
   return (
     <div className='shadow-md p-3 rounded-md lg:p-5'>
         <div className='flex items-center justify-between'>
@@ -52,7 +79,7 @@ const SidePanel = ({doctorId,ticketPrice,timeSlots}) => {
                 ))}
             </ul>
         </div>
-        <button className='btn w-full px-2 rounded-md'>
+        <button onClick={bookingHandler} className='btn w-full px-2 rounded-md'>
             Book Appointment
         </button>
     </div>
